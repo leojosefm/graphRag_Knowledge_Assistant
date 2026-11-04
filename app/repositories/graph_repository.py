@@ -1,9 +1,10 @@
-from platform import node
+
+import re
 
 from app.neo4j_connection import Neo4jConnection
 from app.models.labels import Label
 from app.models.relationship import Relationship
-import re
+
 
 class GraphRepository:
 
@@ -13,16 +14,22 @@ class GraphRepository:
     def close(self):
         self.db.close()
 
-    # ------------------------------------------------------------------
+    # =========================================================
     # Generic Node Operations
-    # ------------------------------------------------------------------
+    # =========================================================
 
-    def create_node(self, label: Label, properties: dict, identity_key: str = "name"):
-
+    def create_node(
+        self,
+        label: Label,
+        properties: dict,
+        identity_key: str = "name"
+    ):
 
         if not isinstance(label, Label):
             raise ValueError("Invalid node label")
 
+        if not isinstance(properties, dict):
+            raise ValueError("Properties must be a dictionary")
 
         if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", identity_key):
             raise ValueError("Invalid identity key")
@@ -31,6 +38,9 @@ class GraphRepository:
             raise ValueError(f"'{identity_key}' is required")
 
         identity_value = properties[identity_key]
+
+        if identity_value is None or identity_value == "":
+            raise ValueError(f"'{identity_key}' cannot be empty")
 
         other_properties = {
             key: value
@@ -41,66 +51,61 @@ class GraphRepository:
         for key in other_properties:
             if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", key):
                 raise ValueError(f"Invalid property name: {key}")
-        
+
         query = f"""
         MERGE (n:{label.value} {{{identity_key}: $identity_value}})
         SET n += $properties
-        RETURN
-            properties(n) AS node
+        RETURN properties(n) AS node
         """
-            # MERGE (n:Technology {name: "Spark"})
-            # SET n += {
-            #     category: "PROCESSING",
-            #     description: "Distributed data processing engine"
-            # }
-            # RETURN properties(n) AS node
-        
 
-        return self.db.execute_query(query, properties)
+        params = {
+            "identity_value": identity_value,
+            "properties": other_properties
+        }
+
+        return self.db.execute_query(query, params)
 
     def get_node(self, label: Label, name: str):
 
         query = f"""
-        MATCH (n:{label.value} {{name:$name}})
-
-        RETURN
-            properties(n) AS node
+        MATCH (n:{label.value} {{name: $name}})
+        RETURN properties(n) AS node
         """
 
         return self.db.execute_query(
             query,
-            {
-                "name": name
-            }
+            {"name": name}
         )
 
     def get_all_nodes(self, label: Label):
 
         query = f"""
         MATCH (n:{label.value})
-
-        RETURN
-            properties(n) AS node
-
+        RETURN properties(n) AS node
         ORDER BY n.name
         """
 
         return self.db.execute_query(query)
 
-    def update_node(self, label: Label, name: str, properties: dict):
+    def update_node(
+        self,
+        label: Label,
+        name: str,
+        properties: dict
+    ):
+
+        for key in properties:
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", key):
+                raise ValueError(f"Invalid property name: {key}")
 
         set_clause = ", ".join(
             [f"n.{key} = ${key}" for key in properties.keys()]
         )
 
         query = f"""
-        MATCH (n:{label.value} {{name:$name}})
-
-        SET
-            {set_clause}
-
-        RETURN
-            properties(n) AS node
+        MATCH (n:{label.value} {{name: $name}})
+        SET {set_clause}
+        RETURN properties(n) AS node
         """
 
         params = {"name": name}
@@ -111,21 +116,18 @@ class GraphRepository:
     def delete_node(self, label: Label, name: str):
 
         query = f"""
-        MATCH (n:{label.value} {{name:$name}})
-
+        MATCH (n:{label.value} {{name: $name}})
         DETACH DELETE n
         """
 
         return self.db.execute_query(
             query,
-            {
-                "name": name
-            }
+            {"name": name}
         )
 
-    # ------------------------------------------------------------------
+    # =========================================================
     # Relationship Operations
-    # ------------------------------------------------------------------
+    # =========================================================
 
     def create_relationship(
         self,
@@ -136,9 +138,18 @@ class GraphRepository:
         target_name: str
     ):
 
+        if not isinstance(source_label, Label):
+            raise ValueError("Invalid source label")
+
+        if not isinstance(target_label, Label):
+            raise ValueError("Invalid target label")
+
+        if not isinstance(relationship, Relationship):
+            raise ValueError("Invalid relationship type")
+
         query = f"""
-        MATCH (s:{source_label.value} {{name:$source}})
-        MATCH (t:{target_label.value} {{name:$target}})
+        MATCH (s:{source_label.value} {{name: $source}})
+        MATCH (t:{target_label.value} {{name: $target}})
 
         MERGE (s)-[r:{relationship.value}]->(t)
 
@@ -155,19 +166,11 @@ class GraphRepository:
                 "target": target_name
             }
         )
-        # MATCH (n:Technology {{name:'{source_name}'}})  -- Cypher injection
-        # Kafka'}) DETACH DELETE n //
-        # MATCH (n:Technology {name:'Kafka'}) DETACH DELETE n //'})
-        # use parameters  MATCH (n:Technology {name:$source})
-#         {
-#     "source": "Kafka'}) DETACH DELETE n //"
-# }  MATCH (n:Technology {name:$source})
-#  source = "Kafka'}) DETACH DELETE n //" returns nothing
- 
+
     def get_neighbors(self, label: Label, name: str):
 
         query = f"""
-        MATCH (n:{label.value} {{name:$name}})-[r]-(neighbor)
+        MATCH (n:{label.value} {{name: $name}})-[r]-(neighbor)
 
         RETURN
             properties(n) AS node,
@@ -179,10 +182,74 @@ class GraphRepository:
 
         return self.db.execute_query(
             query,
-            {
-                "name": name
-            }
+            {"name": name}
         )
+
+    def get_all_relationships(
+        self,
+        source_label: Label,
+        target_label: Label
+    ):
+
+        query = f"""
+        MATCH (s:{source_label.value})-[r]->(t:{target_label.value})
+
+        RETURN
+            s.name AS source,
+            type(r) AS relationship,
+            t.name AS target
+
+        ORDER BY source, relationship, target
+        """
+
+        return self.db.execute_query(query)
+
+    def update_relationship(
+        self,
+        source_label: Label,
+        old_source: str,
+        old_relationship: Relationship,
+        old_target: str,
+        new_source: str,
+        new_relationship: Relationship,
+        new_target: str,
+        target_label: Label
+    ):
+
+        if not isinstance(old_relationship, Relationship):
+            raise ValueError("Invalid old relationship type")
+
+        if not isinstance(new_relationship, Relationship):
+            raise ValueError("Invalid new relationship type")
+
+        query = f"""
+        MATCH (s:{source_label.value} {{name: $old_source}})
+              -[r:{old_relationship.value}]->
+              (t:{target_label.value} {{name: $old_target}})
+
+        MATCH (new_s:{source_label.value} {{name: $new_source}})
+        MATCH (new_t:{target_label.value} {{name: $new_target}})
+
+        WITH r, new_s, new_t
+
+        DELETE r
+
+        MERGE (new_s)-[new_r:{new_relationship.value}]->(new_t)
+
+        RETURN
+            new_s.name AS source,
+            type(new_r) AS relationship,
+            new_t.name AS target
+        """
+
+        params = {
+            "old_source": old_source,
+            "old_target": old_target,
+            "new_source": new_source,
+            "new_target": new_target
+        }
+
+        return self.db.execute_query(query, params)
 
     def delete_relationship(
         self,
@@ -194,9 +261,9 @@ class GraphRepository:
     ):
 
         query = f"""
-        MATCH (s:{source_label.value} {{name:$source}})
+        MATCH (s:{source_label.value} {{name: $source}})
               -[r:{relationship.value}]->
-              (t:{target_label.value} {{name:$target}})
+              (t:{target_label.value} {{name: $target}})
 
         DELETE r
         """

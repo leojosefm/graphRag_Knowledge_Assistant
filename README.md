@@ -1,383 +1,246 @@
-# DataStack AI
+# Mini GraphRAG Knowledge Assistant
 
-DataStack AI is a hands-on learning project that combines modern data engineering and AI technologies into a single application.
 
-The goal is to understand how technologies such as Graph Databases, Vector Search, Knowledge Graphs, AI Agents and Retrieval Augmented Generation (RAG) work together in a real-world system.
+**Status: In Progress**
 
-This project is intentionally built from scratch with a production-style architecture.
+This is a learning project exploring knowledge graphs, vector search and LLM-powered agents to build a technical knowledge assistant.
 
----
+The initial focus is on public documentation from the data engineering ecosystem, including Apache Airflow, Apache Kafka, Apache Spark and dbt.
 
-# Tech Stack
-
-- Python 3.11+
-- Docker & Docker Compose
-- Neo4j Graph Database
-- Streamlit
-- OpenAI
-- Vector Search (Coming Soon)
-- AI Agents (Coming Soon)
+The goal is to build a small, containerised application that allows users to explore technology relationships, retrieve relevant documentation and ask technical questions using natural language.
 
 ---
 
-# Project Roadmap
+## Project Objectives
 
-## Phase 1 - Knowledge Graph
+- Build a knowledge graph using Neo4j to represent technologies and their relationships.
+- Explore graph-based retrieval alongside traditional vector search.
+- Implement document ingestion, chunking and embedding generation.
+- Develop a lightweight AI agent capable of using bounded retrieval tools.
+- Build an interactive Streamlit application.
+- Compare Vector RAG, Graph RAG and Hybrid GraphRAG.
+- Keep LLM usage and token consumption measurable and controlled.
 
-- [x] Docker setup
-- [x] Neo4j
-- [x] Repository Pattern
-- [x] Seed Graph
-- [ ] Streamlit UI
+## Technology Stack
 
----
-
-## Phase 2 - Document Processing
-
-- [ ] PDF Upload
-- [ ] Document Parsing
-- [ ] Text Chunking
-- [ ] Store Documents in Neo4j
-
----
-
-## Phase 3 - Vector Search
-
-- [ ] Generate Embeddings
-- [ ] Create Vector Index
-- [ ] Semantic Search
+| Component | Technology |
+|---|---|
+| Programming language | Python 3.12 |
+| Graph database | Neo4j |
+| Application UI | Streamlit |
+| Graph visualisation | PyVis |
+| Embeddings | Sentence Transformers (planned) |
+| LLM | Hosted LLM or Ollama (TBD) |
+| Containerisation | Docker / Docker Compose |
+| Testing | pytest (planned) |
 
 ---
 
-## Phase 4 - GraphRAG
+## Development Progress
 
-- [ ] Combine Graph Search with Vector Search
-- [ ] Context Retrieval
-- [ ] LLM Integration
+### Phase 1 – Infrastructure Setup
+
+**Status: Completed**
+
+- Docker Compose environment configured.
+- Neo4j Community Edition deployed.
+- Streamlit application container configured.
+- Application-to-Neo4j connectivity established.
+- Environment variables and database credentials configured.
+
+### Phase 2 – Knowledge Graph Foundation
+
+**Status: Completed**
+
+- Defined initial graph node labels and relationship types.
+- Implemented Neo4j schema constraints.
+- Created technology seed data.
+- Implemented initial graph population using `MERGE`.
+- Established a reusable graph repository layer.
+
+### Phase 3 – Graph Repository
+
+**Status: Implemented**
+
+Implemented repository operations for:
+
+- Creating nodes.
+- Retrieving individual nodes.
+- Retrieving all nodes.
+- Updating nodes.
+- Deleting nodes.
+- Creating relationships.
+- Retrieving neighbouring nodes.
+- Retrieving relationships.
+- Updating relationships.
+- Deleting relationships.
+
+### Phase 4 – Streamlit Graph Management UI
+
+**Status: In Progress**
+
+Implemented:
+
+- Technologies page for adding and deleting technologies.
+- Relationships page for creating, editing and deleting relationships.
+- Display of available technologies and relationships.
+
+Further testing and refinement of relationship management is ongoing.
+
+### Phase 5 – Graph Explorer
+
+**Status: In Progress**
+
+Planned implementation using PyVis and Streamlit.
+
+Features being developed:
+
+- Interactive graph visualisation.
+- Display technology nodes and directed relationships.
+- Zooming and node repositioning.
+- Filtering by technology category.
+- Exploring direct neighbours of a selected technology.
+
+### Phase 6 – Document Ingestion
+
+**Status: Planned**
+
+- Identify and download a small, version-pinned set of public documentation.
+- Extract and clean document content.
+- Implement document chunking.
+- Generate embeddings using Sentence Transformers.
+- Store document and chunk metadata in Neo4j.
+- Create a Neo4j vector index.
+
+### Phase 7 – Retrieval and GraphRAG
+
+**Status: Planned**
+
+- Implement vector similarity search.
+- Build predefined graph traversal queries.
+- Link graph entities to documentation chunks.
+- Implement hybrid retrieval combining vector and graph search.
+- Return grounded answers with source references.
+
+### Phase 8 – AI Agent
+
+**Status: Planned**
+
+- Implement bounded agent tools.
+- Add question routing.
+- Enable the agent to select appropriate retrieval tools.
+- Generate answers using retrieved documentation and graph context.
+- Track token consumption, latency and tool execution.
+
+### Phase 9 – Evaluation
+
+**Status: Planned**
+
+Compare three retrieval approaches:
+
+1. Vector-only RAG.
+2. Graph-only retrieval.
+3. Hybrid GraphRAG.
+
+Evaluate answer correctness, retrieval relevance, citation support, latency, token usage and unsupported claims.
 
 ---
 
-## Phase 5 - AI Agent
-
-- [ ] AI Assistant
-- [ ] Technology Recommendations
-- [ ] Knowledge Graph Exploration
-
----
-
-# Project Structure
-
-```
-datastack-ai/
-│
-├── docker-compose.yml
-├── Dockerfile
-├── requirements.txt
-├── .env
-│
-├── app/
-│   ├── streamlit_app.py
-│   ├── neo4j_connection.py
-│   ├── test_connection.py
-│   │
-│   ├── repositories/
-│   │      └── graph_repository.py
-│   │
-│   ├── models/
-│   │      ├── labels.py
-│   │      ├── relationship.py
-│   │      └── technology_category.py
-│   │
-│   └── seed/
-│          ├── technologies.py
-│          ├── relationships.py
-│          └── seed_graph.py
-│
-└── README.md
-```
-
----
-
-# Architecture
-
-```
-                Streamlit
-                     │
-                     ▼
-             GraphRepository
-                     │
-                     ▼
-            Neo4jConnection
-                     │
-                     ▼
-                 Neo4j
-```
-
-Each layer has a single responsibility.
-
-- Streamlit → User Interface
-- Repository → Database Operations
-- Connection → Neo4j Driver
-- Neo4j → Graph Database
-
----
-
-# Getting Started
-
-## Clone Repository
-
-```bash
-git clone <repository-url>
-
-cd datastack-ai
-```
-
----
-
-## Create Environment File
-
-Create a `.env` file.
+## Current Project Structure
 
 ```text
-NEO4J_URI=bolt://neo4j:7687
-NEO4J_USERNAME=neo4j
-NEO4J_PASSWORD=password
-NEO4J_DATABASE=datastack
+datastack-ai/
+├── Dockerfile
+├── docker-compose.yml
+├── .env
+├── requirements.txt
+├── README.md
+└── app/
+    ├── streamlit_app.py
+    ├── neo4j_connection.py
+    ├── pages/
+    │   ├── technologies.py
+    │   ├── relationships.py
+    │   └── graph_explorer.py
+    ├── repositories/
+    │   └── graph_repository.py
+    ├── models/
+    │   ├── labels.py
+    │   ├── relationship.py
+    │   └── technology_category.py
+    ├── database/
+    │   └── schema_manager.py
+    └── seed/
+        ├── technologies.py
+        ├── relationships.py
+        └── seed_graph.py
 ```
+
+*Note: The Graph Explorer page is currently being developed. The structure will evolve as document ingestion and retrieval components are added.*
 
 ---
 
-## Build Docker Containers
+## Running the Application
+
+### Prerequisites
+
+- Docker Desktop
+- Docker Compose
+- Git
+
+### Configuration
+
+Create a `.env` file in the project root and configure the Neo4j password.
+
+```env
+NEO4J_PASSWORD=your_password
+```
+
+### Start the application
 
 ```bash
 docker compose up --build -d
 ```
 
----
+### Access the applications
 
-## Verify Containers
-
-```bash
-docker compose ps
-```
-
-Expected:
-
-```
-neo4j      healthy
-
-app        running
-```
+| Application | URL |
+|---|---|
+| Streamlit | http://localhost:8501 |
+| Neo4j Browser | http://localhost:7474 |
 
 ---
 
-# Neo4j Browser
+## Initial Documentation Sources
 
-Open
+The knowledge assistant will initially focus on publicly available documentation:
 
-```
-http://localhost:7474
-```
+- [Apache Airflow](https://airflow.apache.org/docs/)
+- [Apache Kafka](https://kafka.apache.org/documentation/)
+- [Apache Spark](https://spark.apache.org/docs/latest/)
+- [dbt](https://docs.getdbt.com/)
 
-Login
-
-Username
-
-```
-neo4j
-```
-
-Password
-
-```
-password
-```
-
-(or whatever you configured in `.env`)
+Only a small, version-pinned documentation subset will be used for the initial prototype.
 
 ---
 
-# Test Neo4j Connection
+## Project Scope and Design Principles
 
-```
-docker compose exec app python -m app.test_connection
-```
-
-Expected output
-
-```
-Successfully connected to Neo4j
-```
-
----
-
-# Seed the Knowledge Graph
-
-```
-docker compose exec app python -m app.seed.seed_graph
-```
-
-This creates:
-
-- Technology Nodes
-- Relationships between technologies
+- Use public documentation only.
+- Keep the prototype small and reproducible.
+- Use Neo4j for both graph storage and vector retrieval.
+- Prefer local embeddings to minimise external API usage.
+- Avoid unrestricted LLM-generated Cypher queries.
+- Use predefined, parameterised graph queries.
+- Keep agent execution bounded and measurable.
+- Preserve source references to support grounded answers.
 
 ---
 
-# Verify Seed Data
+## Project Roadmap
 
-Open Neo4j Browser.
+The immediate priority is to complete the graph management interface and interactive Graph Explorer.
 
-Run
+The next major milestone is document ingestion, followed by vector search and the integration of GraphRAG capabilities.
 
-```cypher
-MATCH (n)
-RETURN n
-```
-
-To view relationships
-
-```cypher
-MATCH (n)-[r]->(m)
-RETURN *
-```
-
----
-
-# Repository Pattern
-
-The application follows the Repository Pattern.
-
-Instead of executing Cypher directly throughout the application,
-
-```
-Streamlit
-
-↓
-
-GraphRepository
-
-↓
-
-Neo4j
-```
-
-All graph operations are centralized inside
-
-```
-graph_repository.py
-```
-
-Examples:
-
-```python
-repo.create_node(...)
-
-repo.get_node(...)
-
-repo.create_relationship(...)
-
-repo.get_neighbors(...)
-```
-
----
-
-# Why Repository Pattern?
-
-Benefits
-
-- Single place for all Cypher queries
-- Easier testing
-- Cleaner architecture
-- Separation of concerns
-- Easily reusable by Streamlit and AI Agents
-
----
-
-# Current Knowledge Graph
-
-Technology Nodes contain
-
-```
-Name
-
-Category
-
-Description
-```
-
-Relationships currently include
-
-```
-STREAMS_TO
-
-READS_FROM
-
-WRITES_TO
-
-ORCHESTRATES
-
-TRANSFORMS
-
-DEPENDS_ON
-```
-
----
-
-# Next Steps
-
-The next milestone is to ingest real technical documentation.
-
-The pipeline will be
-
-```
-PDF
-
-↓
-
-Chunking
-
-↓
-
-Embeddings
-
-↓
-
-Vector Index
-
-↓
-
-Neo4j Knowledge Graph
-
-↓
-
-GraphRAG
-
-↓
-
-AI Agent
-```
-
----
-
-# Learning Objectives
-
-This project is designed to provide hands-on experience with:
-
-- Graph Databases
-- Cypher Query Language
-- Repository Pattern
-- Docker
-- Vector Databases
-- Embeddings
-- Semantic Search
-- Retrieval Augmented Generation (RAG)
-- GraphRAG
-- AI Agents
-- Production-style Python project architecture
-
----
-
-# License
-
-MIT
+**This project is actively under development. The features listed as planned or in progress are not yet considered complete.**

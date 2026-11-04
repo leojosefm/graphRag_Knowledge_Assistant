@@ -61,9 +61,50 @@ with st.form("technology_form"):
 
 st.divider()
 
-st.subheader("Available Technologies")
-
 technologies = repo.get_all_nodes(Label.TECHNOLOGY)
+
+st.subheader("Delete Technology")
+
+if technologies:
+
+    technology_names = [
+        technology["node"]["name"]
+        for technology in technologies
+    ]
+
+    selected_technology = st.selectbox(
+        "Select technology to delete",
+        technology_names
+    )
+
+    confirm_delete = st.checkbox(
+        f"I understand that deleting {selected_technology} "
+        "will also delete its relationships."
+    )
+
+    if st.button(
+        "Delete Technology",
+        disabled=not confirm_delete
+    ):
+        try:
+            repo.delete_node(
+                Label.TECHNOLOGY,
+                selected_technology
+            )
+
+            st.success(
+                f"{selected_technology} deleted successfully."
+            )
+
+            st.rerun()
+
+        except Exception as e:
+            st.error(f"Unable to delete technology: {e}")
+
+else:
+    st.info("No technologies available to delete.")
+
+st.subheader("Available Technologies")
 
 if technologies:
 

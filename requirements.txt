@@ -2,3 +2,4 @@ neo4j
 python-dotenv
 streamlit
 pytest
+pyvis==0.3.2
