@@ -5,4 +5,3 @@ class Label(StrEnum):
     DOCUMENT = "Document"
     CHUNK = "Chunk"
     CONCEPT = "Concept"
-    PERSON = "Person"

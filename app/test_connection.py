@@ -1,4 +1,4 @@
-from app.database import Neo4jConnection
+from app.neo4j_connection import Neo4jConnection
 
 def main():
     db = Neo4jConnection()
