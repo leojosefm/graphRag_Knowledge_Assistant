@@ -1,5 +1,6 @@
 from enum import StrEnum
 
+
 class Relationship(StrEnum):
     STREAMS_TO = "STREAMS_TO"
     READS_FROM = "READS_FROM"
@@ -7,3 +8,7 @@ class Relationship(StrEnum):
     ORCHESTRATES = "ORCHESTRATES"
     TRANSFORMS = "TRANSFORMS"
     DEPENDS_ON = "DEPENDS_ON"
+    CONNECTS_TO = "CONNECTS_TO"
+    PROVIDES = "PROVIDES"
+    SUPPORTS = "SUPPORTS"
+    MANAGES = "MANAGES"

@@ -1,7 +1,9 @@
+from platform import node
+
 from app.neo4j_connection import Neo4jConnection
 from app.models.labels import Label
 from app.models.relationship import Relationship
-
+import re
 
 class GraphRepository:
 
@@ -15,18 +17,44 @@ class GraphRepository:
     # Generic Node Operations
     # ------------------------------------------------------------------
 
-    def create_node(self, label: Label, properties: dict):
+    def create_node(self, label: Label, properties: dict, identity_key: str = "name"):
 
-        property_string = ", ".join(
-            [f"{key}: ${key}" for key in properties.keys()]
-        )
 
+        if not isinstance(label, Label):
+            raise ValueError("Invalid node label")
+
+
+        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", identity_key):
+            raise ValueError("Invalid identity key")
+
+        if identity_key not in properties:
+            raise ValueError(f"'{identity_key}' is required")
+
+        identity_value = properties[identity_key]
+
+        other_properties = {
+            key: value
+            for key, value in properties.items()
+            if key != identity_key
+        }
+
+        for key in other_properties:
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", key):
+                raise ValueError(f"Invalid property name: {key}")
+        
         query = f"""
-        MERGE (n:{label.value} {{{property_string}}})
-
+        MERGE (n:{label.value} {{{identity_key}: $identity_value}})
+        SET n += $properties
         RETURN
             properties(n) AS node
         """
+            # MERGE (n:Technology {name: "Spark"})
+            # SET n += {
+            #     category: "PROCESSING",
+            #     description: "Distributed data processing engine"
+            # }
+            # RETURN properties(n) AS node
+        
 
         return self.db.execute_query(query, properties)
 

@@ -2,6 +2,12 @@ from app.models.labels import Label
 from app.repositories.graph_repository import GraphRepository
 from app.seed.relationships import RELATIONSHIPS
 from app.seed.technologies import TECHNOLOGIES
+from app.database.schema_manager import SchemaManager
+
+
+schema = SchemaManager()
+schema.create_constraints()
+schema.close()
 
 repo = GraphRepository()
 
