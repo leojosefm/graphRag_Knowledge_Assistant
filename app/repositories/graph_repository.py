@@ -1,5 +1,5 @@
 from app.neo4j_connection import Neo4jConnection
-from app.models.label import Label
+from app.models.labels import Label
 from app.models.relationship import Relationship
 
 
