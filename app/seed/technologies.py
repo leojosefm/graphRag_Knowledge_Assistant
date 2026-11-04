@@ -1,4 +1,4 @@
-from app.models.technology_category import TechnologyCategory
+from models.technology_category import TechnologyCategory
 
 TECHNOLOGIES = [
     {

@@ -1,6 +1,6 @@
-from app.neo4j_connection import Neo4jConnection
-from app.models.labels import Label
-from app.models.relationship import Relationship
+from neo4j_connection import Neo4jConnection
+from models.labels import Label
+from models.relationship import Relationship
 
 
 class GraphRepository:

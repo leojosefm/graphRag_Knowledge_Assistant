@@ -3,25 +3,16 @@ import streamlit as st
 
 st.set_page_config(
     page_title="DataStack AI",
-    page_icon="🧠",
     layout="wide"
 )
 
-st.title("🧠 DataStack AI")
-
-st.subheader("Knowledge Assistant")
+st.title(" DataStack AI Knowledge Assistant")
 
 st.write(
-    "Welcome to DataStack AI. "
-    "Your AI-powered data engineering knowledge assistant."
-)
+    """
+    Welcome to DataStack AI.
 
-question = st.text_input(
-    "Ask a data engineering question",
-    placeholder="How do Kafka consumer groups work?"
+    This application demonstrates how Graph Databases,
+    Vector Search and AI Agents work together.
+    """
 )
-
-if st.button("Submit"):
-    if question:
-        st.info(f"Your question: {question}")
-        st.warning("Knowledge retrieval is coming soon!")

@@ -1,4 +1,4 @@
-from app.models.relationship import Relationship
+from models.relationship import Relationship
 
 RELATIONSHIPS = [
     {
