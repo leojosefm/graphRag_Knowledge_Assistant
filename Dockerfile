@@ -17,6 +17,8 @@ COPY ingestion/ ./ingestion/
 COPY retrieval/ ./retrieval/
 COPY graph/ ./graph/
 
+ENV PYTHONPATH=/app
+
 # Expose Streamlit port
 EXPOSE 8501
 

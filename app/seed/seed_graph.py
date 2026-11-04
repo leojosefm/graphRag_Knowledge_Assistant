@@ -1,7 +1,7 @@
-from models.labels import Label
-from repositories.graph_repository import GraphRepository
-from seed.relationships import RELATIONSHIPS
-from seed.technologies import TECHNOLOGIES
+from app.models.labels import Label
+from app.repositories.graph_repository import GraphRepository
+from app.seed.relationships import RELATIONSHIPS
+from app.seed.technologies import TECHNOLOGIES
 
 repo = GraphRepository()
 

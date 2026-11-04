@@ -1,8 +1,8 @@
 import streamlit as st
 
-from models.labels import Label
-from models.technology_category import TechnologyCategory
-from repositories.graph_repository import GraphRepository
+from app.models.labels import Label
+from app.models.technology_category import TechnologyCategory
+from app.repositories.graph_repository import GraphRepository
 
 
 st.set_page_config(
