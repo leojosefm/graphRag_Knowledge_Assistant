@@ -13,9 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application source code
 COPY app/ ./app/
-COPY ingestion/ ./ingestion/
-COPY retrieval/ ./retrieval/
-COPY graph/ ./graph/
 
 ENV PYTHONPATH=/app
 

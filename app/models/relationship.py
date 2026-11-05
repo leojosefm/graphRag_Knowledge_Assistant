@@ -12,3 +12,5 @@ class Relationship(StrEnum):
     PROVIDES = "PROVIDES"
     SUPPORTS = "SUPPORTS"
     MANAGES = "MANAGES"
+    HAS_DOCUMENT = "HAS_DOCUMENT"
+    HAS_CHUNK = "HAS_CHUNK"

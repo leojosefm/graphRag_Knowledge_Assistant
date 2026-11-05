@@ -132,10 +132,12 @@ class GraphRepository:
     def create_relationship(
         self,
         source_label: Label,
-        source_name: str,
+        source_key: str,
+        source_value: str,
         relationship: Relationship,
         target_label: Label,
-        target_name: str
+        target_key: str,
+        target_value: str
     ):
 
         if not isinstance(source_label, Label):
@@ -147,9 +149,15 @@ class GraphRepository:
         if not isinstance(relationship, Relationship):
             raise ValueError("Invalid relationship type")
 
+        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", source_key):
+            raise ValueError("Invalid source key")
+
+        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", target_key):
+            raise ValueError("Invalid target key")
+
         query = f"""
-        MATCH (s:{source_label.value} {{name: $source}})
-        MATCH (t:{target_label.value} {{name: $target}})
+        MATCH (s:{source_label.value} {{{source_key}: $source}})
+        MATCH (t:{target_label.value} {{{target_key}: $target}})
 
         MERGE (s)-[r:{relationship.value}]->(t)
 
@@ -162,8 +170,8 @@ class GraphRepository:
         return self.db.execute_query(
             query,
             {
-                "source": source_name,
-                "target": target_name
+                "source": source_value,
+                "target": target_value
             }
         )
 

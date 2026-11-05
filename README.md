@@ -77,7 +77,7 @@ Implemented repository operations for:
 
 ### Phase 4 – Streamlit Graph Management UI
 
-**Status: In Progress**
+**Status: Complete**
 
 Implemented:
 
@@ -89,28 +89,42 @@ Further testing and refinement of relationship management is ongoing.
 
 ### Phase 5 – Graph Explorer
 
-**Status: In Progress**
+**Status: Implemented**
 
-Planned implementation using PyVis and Streamlit.
+Implemented:
 
-Features being developed:
-
-- Interactive graph visualisation.
+- Interactive graph visualisation using PyVis.
 - Display technology nodes and directed relationships.
 - Zooming and node repositioning.
-- Filtering by technology category.
-- Exploring direct neighbours of a selected technology.
+- Interactive exploration of graph relationships.
 
+Future enhancements:
+
+- Filtering by technology category.
+- Display node metadata.
+- Search and highlight technologies.
 ### Phase 6 – Document Ingestion
 
-**Status: Planned**
+**Status: In Progress**
 
-- Identify and download a small, version-pinned set of public documentation.
-- Extract and clean document content.
-- Implement document chunking.
-- Generate embeddings using Sentence Transformers.
-- Store document and chunk metadata in Neo4j.
-- Create a Neo4j vector index.
+Implemented:
+
+- Configurable documentation sources.
+- Recursive documentation crawler.
+- HTML parsing and content extraction.
+- Document cleaning.
+- Fixed-size document chunking.
+- Neo4j document storage.
+- Chunk storage.
+- Technology → Document relationships.
+- Document → Chunk relationships.
+
+Currently working on:
+
+- Better crawl filtering.
+- Version-aware documentation.
+- Incremental ingestion.
+- Metadata enrichment.
 
 ### Phase 7 – Retrieval and GraphRAG
 
