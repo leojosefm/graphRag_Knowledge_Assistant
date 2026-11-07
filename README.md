@@ -105,7 +105,7 @@ Future enhancements:
 - Search and highlight technologies.
 ### Phase 6 – Document Ingestion
 
-**Status: In Progress**
+**Status: Completed**
 
 Implemented:
 
@@ -128,13 +128,22 @@ Currently working on:
 
 ### Phase 7 – Retrieval and GraphRAG
 
-**Status: Planned**
+**Status: In Progress**
 
-- Implement vector similarity search.
-- Build predefined graph traversal queries.
-- Link graph entities to documentation chunks.
-- Implement hybrid retrieval combining vector and graph search.
-- Return grounded answers with source references.
+Implemented:
+
+- Query embedding generation
+- Neo4j vector similarity search
+- Top-K semantic retrieval
+- HNSW vector search
+
+Currently working on:
+
+- Graph-aware retrieval
+- Hybrid graph + vector retrieval
+- Source attribution
+- Retrieval ranking
+- Graph traversal queries
 
 ### Phase 8 – AI Agent
 
@@ -223,6 +232,25 @@ docker compose up --build -d
 | Streamlit | http://localhost:8501 |
 | Neo4j Browser | http://localhost:7474 |
 
+
+## Seed the Knowledge Graph
+
+```bash
+docker compose exec app python -m app.seed.seed_graph
+```
+
+## Ingest Documentation
+
+```bash
+docker compose exec app python -m app.ingestion.pipeline
+```
+
+## Test Semantic Retrieval
+
+```bash
+docker compose exec app python -m app.retrieval.test_vector_retriever
+```
+
 ---
 
 ## Initial Documentation Sources
@@ -250,11 +278,3 @@ Only a small, version-pinned documentation subset will be used for the initial p
 - Preserve source references to support grounded answers.
 
 ---
-
-## Project Roadmap
-
-The immediate priority is to complete the graph management interface and interactive Graph Explorer.
-
-The next major milestone is document ingestion, followed by vector search and the integration of GraphRAG capabilities.
-
-**This project is actively under development. The features listed as planned or in progress are not yet considered complete.**
