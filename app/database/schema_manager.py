@@ -17,5 +17,21 @@ class SchemaManager:
 
         self.db.execute_query(query)
 
+    def create_vector_index(self):
+        query = """
+        CREATE VECTOR INDEX chunk_embedding_index
+        IF NOT EXISTS
+        FOR (c:Chunk)
+        ON (c.embedding)
+        OPTIONS {
+            indexConfig: {
+                `vector.dimensions`: 384,
+                `vector.similarity_function`: 'cosine'
+            }
+        }
+        """
+
+        self.db.execute_query(query)
+    
     def close(self):
         self.db.close()
