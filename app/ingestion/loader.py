@@ -2,6 +2,7 @@ from app.ingestion.chunker import DocumentChunker
 from app.models.labels import Label
 from app.models.relationship import Relationship
 from app.repositories.graph_repository import GraphRepository
+from app.embedding.embedding_service import EmbeddingService
 
 
 class DocumentationLoader:
@@ -9,6 +10,7 @@ class DocumentationLoader:
     def __init__(self):
         self.repo = GraphRepository()
         self.chunker = DocumentChunker()
+        self.embedding_service = EmbeddingService()
 
     def close(self):
         self.repo.close()
@@ -43,8 +45,10 @@ class DocumentationLoader:
 
             # Split document into chunks
             chunks = self.chunker.chunk(document)
+            texts = [chunk["text"] for chunk in chunks]
+            embeddings = self.embedding_service.embed_batch(texts)
 
-            for chunk in chunks:
+            for chunk, embedding in zip(chunks, embeddings):
 
                 chunk_id = f"{chunk['url']}#{chunk['chunk_number']}"
 
@@ -54,7 +58,8 @@ class DocumentationLoader:
                     properties={
                         "id": chunk_id,
                         "chunk_number": chunk["chunk_number"],
-                        "text": chunk["text"]
+                        "text": chunk["text"],
+                        "embedding": embedding
                     },
                     identity_key="id"
                 )

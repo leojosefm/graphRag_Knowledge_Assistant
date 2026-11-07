@@ -47,6 +47,11 @@ services:
       neo4j:
         condition: service_healthy
 
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+
+
 volumes:
   neo4j_data:
   neo4j_logs:
+  huggingface_cache:
