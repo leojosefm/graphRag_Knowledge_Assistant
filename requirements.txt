@@ -4,3 +4,4 @@ streamlit
 pytest
 pyvis==0.3.2
 bs4
+urllib3

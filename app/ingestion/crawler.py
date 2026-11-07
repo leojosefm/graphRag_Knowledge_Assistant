@@ -1,9 +1,11 @@
 from collections import deque
+from importlib.resources import path
 from urllib.parse import urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
-
+from urllib.parse import urlparse
+from datetime import datetime
 
 class DocumentationCrawler:
 
@@ -35,6 +37,7 @@ class DocumentationCrawler:
 
             current_url, depth = queue.popleft()
 
+            # to avoid infinite loops, keep track of visited URLS
             if current_url in visited:
                 continue
 
@@ -65,7 +68,10 @@ class DocumentationCrawler:
                 {
                     "technology": source.technology,
                     "url": current_url,
-                    "html": html
+                    "html": html,
+                    "crawl_date": datetime.utcnow().isoformat(),
+                    "crawl_depth": depth,
+                    "domain": urlparse(current_url).netloc,
                 }
             )
 
@@ -83,7 +89,8 @@ class DocumentationCrawler:
 
                 if self._should_visit(
                     source.url,
-                    absolute_url
+                    absolute_url,
+                    source.scope_path
                 ):
 
                     queue.append(
@@ -95,10 +102,14 @@ class DocumentationCrawler:
 
         return documents
 
+
+
+
     def _should_visit(
         self,
         root_url: str,
-        candidate_url: str
+        candidate_url: str,
+        scope_path: str = "",
     ) -> bool:
 
         root = urlparse(root_url)
@@ -108,15 +119,39 @@ class DocumentationCrawler:
         if root.netloc != candidate.netloc:
             return False
 
-        # Ignore anchors
-        if "#" in candidate_url:
+        # Stay within the documentation subtree
+        root_path = root.path.rstrip("/")
+
+        if scope_path and not candidate.path.startswith(root_path):
             return False
 
-        # Ignore mailto/javascript
+        # Ignore page anchors
+        if candidate.fragment:
+            return False
+
+        # Ignore non-web links
         if candidate.scheme not in ("http", "https"):
             return False
 
-        # Ignore assets
+        path = candidate.path.lower()
+
+        # Ignore documentation sections that aren't useful
+        ignored_paths = (
+            "/api/",
+            "/javadoc/",
+            "/scala/",
+            "/java/",
+            "/python/",
+            "/r/",
+            "/search",
+            "/downloads",
+            "/release",
+        )
+
+        if any(ignore in path for ignore in ignored_paths):
+            return False
+
+        # Ignore static assets
         ignored_extensions = (
             ".png",
             ".jpg",
@@ -129,10 +164,10 @@ class DocumentationCrawler:
             ".pdf",
             ".zip",
             ".tar",
-            ".gz"
+            ".gz",
         )
 
-        if candidate.path.lower().endswith(ignored_extensions):
+        if path.endswith(ignored_extensions):
             return False
 
         return True

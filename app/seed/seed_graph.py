@@ -5,6 +5,7 @@ from app.seed.technologies import TECHNOLOGIES
 from app.database.schema_manager import SchemaManager
 
 
+
 schema = SchemaManager()
 schema.create_constraints()
 schema.close()
@@ -27,11 +28,13 @@ for technology in TECHNOLOGIES:
 # Create all relationships
 for relationship in RELATIONSHIPS:
     repo.create_relationship(
-        Label.TECHNOLOGY,
-        relationship["source"],
-        relationship["relationship"],
-        Label.TECHNOLOGY,
-        relationship["target"]
+        source_label=Label.TECHNOLOGY,
+        source_key="name",
+        source_value=relationship["source"],
+        relationship=relationship["relationship"],
+        target_label=Label.TECHNOLOGY,
+        target_key="name",
+        target_value=relationship["target"]
     )
 
 
