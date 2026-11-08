@@ -248,7 +248,7 @@ docker compose exec app python -m app.ingestion.pipeline
 ## Test Semantic Retrieval
 
 ```bash
-docker compose exec app python -m app.retrieval.test_vector_retriever
+docker compose exec app python -m app.retrieval.test_scripts.test_vector_retriever
 ```
 
 ---
