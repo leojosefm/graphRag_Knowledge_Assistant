@@ -49,9 +49,11 @@ services:
 
     volumes:
       - huggingface_cache:/root/.cache/huggingface
+      - ./app:/app/app
 
 
 volumes:
   neo4j_data:
   neo4j_logs:
   huggingface_cache:
+

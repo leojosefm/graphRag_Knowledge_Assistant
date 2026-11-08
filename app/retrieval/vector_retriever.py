@@ -31,7 +31,13 @@ class VectorRetriever:
         )
         YIELD node, score
 
+        MATCH (d:Document)-[:HAS_CHUNK]->(node)
+        MATCH  (t:Technology)-[:HAS_DOCUMENT]->(d)
+
         RETURN
+            t.name as technology,
+            d.title as document,
+            d.url as url,
             node.id AS chunk_id,
             node.text AS text,
             score
