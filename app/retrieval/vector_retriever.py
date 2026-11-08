@@ -39,6 +39,7 @@ class VectorRetriever:
             d.title as document,
             d.url as url,
             node.id AS chunk_id,
+            node.chunk_number AS chunk_number,
             node.text AS text,
             score
 
