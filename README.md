@@ -245,11 +245,18 @@ docker compose exec app python -m app.seed.seed_graph
 docker compose exec app python -m app.ingestion.pipeline
 ```
 
-## Test Semantic Retrieval
+## Test Vector Retrieval
 
 ```bash
 docker compose exec app python -m app.retrieval.test_scripts.test_vector_retriever
 ```
+## Test Semantic Retrieval
+
+```bash
+docker compose exec app python -m app.retrieval.test_scripts.test_hybrid_retriever
+```
+
+
 
 ---
 
