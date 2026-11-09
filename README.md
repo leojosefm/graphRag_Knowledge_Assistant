@@ -1,13 +1,12 @@
-# Mini GraphRAG Knowledge Assistant
-
+## Mini GraphRAG Knowledge Assistant
 
 **Status: In Progress**
 
-This is a learning project exploring knowledge graphs, vector search and LLM-powered agents to build a technical knowledge assistant.
+A containerised GraphRAG project that combines Neo4j knowledge graphs, semantic vector search and a local LLM to answer technical questions from software documentation.
 
-The initial focus is on public documentation from the data engineering ecosystem, including Apache Airflow, Apache Kafka, Apache Spark and dbt.
+The assistant ingests documentation, builds a knowledge graph of technologies, performs hybrid graph and vector retrieval, and generates grounded answers with source attribution.
 
-The goal is to build a small, containerised application that allows users to explore technology relationships, retrieve relevant documentation and ask technical questions using natural language.
+The project is designed as a hands-on exploration of modern Retrieval-Augmented Generation (RAG) architectures while keeping retrieval transparent, deterministic and measurable.
 
 ---
 
