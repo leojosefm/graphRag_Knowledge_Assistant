@@ -1,31 +1,46 @@
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+
 class DocumentChunker:
 
-    def __init__(self, chunk_size: int = 500, chunk_overlap: int = 100):
-        self.chunk_size = chunk_size
-        self.chunk_overlap = chunk_overlap
+    def __init__(
+        self,
+        chunk_size: int = 500,
+        chunk_overlap: int = 100,
+    ):
+
+        self.splitter = RecursiveCharacterTextSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+            separators=[
+                "\n\n",
+                "\n",
+                ". ",
+                " ",
+                ""
+            ],
+        )
 
     def chunk(self, document: dict) -> list[dict]:
         """
-        Splits a parsed document into fixed-size chunks.
+        Splits a cleaned document into overlapping chunks.
         """
 
-        content = document["content"]
+        texts = self.splitter.split_text(
+            document["content"]
+        )
 
         chunks = []
 
-        step = self.chunk_size - self.chunk_overlap
-
-        for i in range(0, len(content), step):
-
-            chunk_text = content[i:i + self.chunk_size]
+        for i, text in enumerate(texts, start=1):
 
             chunks.append(
                 {
                     "technology": document["technology"],
                     "url": document["url"],
                     "title": document["title"],
-                    "chunk_number": len(chunks) + 1,
-                    "text": chunk_text
+                    "chunk_number": i,
+                    "text": text,
                 }
             )
 
