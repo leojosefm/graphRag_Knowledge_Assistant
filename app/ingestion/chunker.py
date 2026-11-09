@@ -1,7 +1,8 @@
 class DocumentChunker:
 
-    def __init__(self, chunk_size: int = 1000):
+    def __init__(self, chunk_size: int = 500, chunk_overlap: int = 100):
         self.chunk_size = chunk_size
+        self.chunk_overlap = chunk_overlap
 
     def chunk(self, document: dict) -> list[dict]:
         """
@@ -12,7 +13,9 @@ class DocumentChunker:
 
         chunks = []
 
-        for i in range(0, len(content), self.chunk_size):
+        step = self.chunk_size - self.chunk_overlap
+
+        for i in range(0, len(content), step):
 
             chunk_text = content[i:i + self.chunk_size]
 

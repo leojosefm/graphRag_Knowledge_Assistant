@@ -14,5 +14,8 @@ st.write(
 
     This application demonstrates how Graph Databases,
     Vector Search and AI Agents work together.
+
+    Use the navigation menu on the left to explore the different components.
+
     """
 )
