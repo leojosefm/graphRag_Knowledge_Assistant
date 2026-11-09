@@ -14,7 +14,8 @@ class VectorRetriever:
     def search(
         self,
         question: str,
-        top_k: int = 5
+        top_k: int = 10,
+        technologies: list[str] | None = None
     ):
         """
         Returns the top_k most similar chunks.
@@ -23,6 +24,7 @@ class VectorRetriever:
         embedding = self.embedding_service.embed(question)
 
         #Search my Vector Index in Neo4j - top K elements ANN 
+        # if technolgies is not None, filter by technology
         query = """
         CALL db.index.vector.queryNodes(
             'chunk_embedding_index',
@@ -33,6 +35,10 @@ class VectorRetriever:
 
         MATCH (d:Document)-[:HAS_CHUNK]->(node)
         MATCH  (t:Technology)-[:HAS_DOCUMENT]->(d)
+        WHERE
+            $technologies IS NULL
+            OR size($technologies) = 0
+            OR t.name IN $technologies
 
         RETURN
             t.name as technology,
@@ -50,6 +56,7 @@ class VectorRetriever:
             query,
             {
                 "top_k": top_k,
-                "embedding": embedding
+                "embedding": embedding,
+                "technologies": technologies
             }
         )

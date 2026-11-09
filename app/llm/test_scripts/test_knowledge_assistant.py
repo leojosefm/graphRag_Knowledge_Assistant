@@ -8,8 +8,10 @@ def main():
     try:
 
         result = assistant.ask(
-            "How do I submit a Spark application using Airflow?"
+            "How do I submit a Spark application using Airflow?",
+            debug=True
         )
+
 
         print("\nAnswer")
         print("=" * 80)

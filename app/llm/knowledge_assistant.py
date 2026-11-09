@@ -11,7 +11,7 @@ class KnowledgeAssistant:
         self.prompt_builder = PromptBuilder()
         self.llm = LLMService()
 
-    def ask(self, question: str) -> str:
+    def ask(self, question: str, debug: bool = False) -> str:
         """
         Retrieves relevant context and generates an answer.
         """
@@ -19,14 +19,23 @@ class KnowledgeAssistant:
         # Step 1 - Retrieve context
         context = self.retriever.search(question)
 
+        print("Retrieval complete")
+
+        if debug:
+            self._print_context(context)
+
         # Step 2 - Build prompt
         prompt = self.prompt_builder.build(
             question=question,
             context=context
         )
 
+        print("Prompt built")
+
         # Step 3 - Ask the LLM
         answer = self.llm.generate(prompt)
+
+        print("LLM finished")
 
         return {
             "question": question,
