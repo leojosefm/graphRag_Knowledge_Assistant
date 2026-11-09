@@ -37,6 +37,19 @@ services:
     volumes:
       - ollama_models:/root/.ollama
 
+
+  ollama-init:
+    image: ollama/ollama:latest
+    depends_on:
+      - ollama
+    entrypoint: >
+      sh -c "
+        sleep 10 &&
+        ollama pull llama3.2
+      "
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+
   app:
     build:
       context: .

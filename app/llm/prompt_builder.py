@@ -46,7 +46,7 @@ Always cite the document title when possible.
 
                 prompt.append("\nRelated Technologies:")
 
-                for relation in related:
+                for relation in related[:5]:
 
                     if relation["technology"]:
 

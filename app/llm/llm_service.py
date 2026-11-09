@@ -5,7 +5,7 @@ class LLMService:
 
     def __init__(
         self,
-        base_url: str = "http://localhost:11434",
+        base_url: str = "http://ollama:11434",
         model: str = "llama3.2"
     ):
         self.base_url = base_url

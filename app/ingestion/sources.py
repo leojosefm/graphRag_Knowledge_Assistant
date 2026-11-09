@@ -7,6 +7,7 @@ class DocumentationSource:
     scope_path: str = ""
     version: str = "latest"
     crawl_depth: int = 1
+    
 
 
 DOCUMENTATION_SOURCES = [
