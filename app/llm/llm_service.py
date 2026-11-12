@@ -9,6 +9,8 @@ class LLMService:
     def __init__(self):
 
         self.provider = os.getenv("LLM_PROVIDER", "ollama")
+        print(f"Provider: {self.provider}")
+        self.model = os.getenv("OPENAI_MODEL")
 
         if self.provider == "openai":
 
