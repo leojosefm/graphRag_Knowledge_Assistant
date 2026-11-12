@@ -12,16 +12,21 @@ class Neo4jConnection:
 
         self.driver = GraphDatabase.driver(self.uri, auth=(self.user, self.password))
 
-
+        print(f"Neo4jConnection created: {id(self)}")
+        print(f"Driver created: {id(self.driver)}")
     def verify_connection(self):
         self.driver.verify_connectivity()
         return True
 
     def execute_query(self, query, parameters=None):
+        print(f"Using Neo4jConnection: {id(self)}")
+        print(f"Using Driver: {id(self.driver)}")
         with self.driver.session(database = "neo4j") as session:
             result = session.run(query, parameters)
             return result.data()
         
 
     def close(self):
+        print(f"Closing Neo4jConnection: {id(self)}")
+        print(f"Closing Driver: {id(self.driver)}")
         self.driver.close()

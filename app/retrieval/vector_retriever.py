@@ -14,7 +14,7 @@ class VectorRetriever:
     def search(
         self,
         question: str,
-        top_k: int = 10,
+        top_k: int = 20,
         technologies: list[str] | None = None
     ):
         """

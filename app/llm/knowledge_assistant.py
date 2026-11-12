@@ -1,6 +1,8 @@
 from app.retrieval.hybrid_retriever import HybridRetriever
 from app.llm.prompt_builder import PromptBuilder
 from app.llm.llm_service import LLMService
+import time
+
 
 
 class KnowledgeAssistant:
@@ -17,10 +19,11 @@ class KnowledgeAssistant:
         """
 
         # Step 1 - Retrieve context
+        start = time.perf_counter()
         context = self.retriever.search(question)
 
         print("Retrieval complete")
-
+        print(f"Retrieval: {time.perf_counter() - start:.2f}s")
         if debug:
             self._print_context(context)
 
@@ -31,11 +34,14 @@ class KnowledgeAssistant:
         )
 
         print("Prompt built")
+        print(f"Prompt length: {len(prompt)} characters")
 
         # Step 3 - Ask the LLM
+        start = time.perf_counter()
         answer = self.llm.generate(prompt)
 
         print("LLM finished")
+        print(f"LLM: {time.perf_counter() - start:.2f}s")
 
         return {
             "question": question,

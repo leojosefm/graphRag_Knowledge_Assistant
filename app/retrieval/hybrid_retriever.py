@@ -53,7 +53,7 @@ class HybridRetriever:
     def search(
         self,
         question: str,
-        top_k: int = 50
+        top_k: int = 20
         ):
         """
         Performs hybrid retrieval by:
@@ -72,7 +72,7 @@ class HybridRetriever:
 
         vector_results = self._limit_chunks_per_document(
             vector_results,
-            max_chunks_per_document=2
+            max_chunks_per_document=5
         )
 
         results = []

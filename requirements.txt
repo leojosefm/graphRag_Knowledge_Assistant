@@ -7,3 +7,4 @@ bs4
 urllib3
 sentence-transformers
 langchain-text-splitters
+openai
