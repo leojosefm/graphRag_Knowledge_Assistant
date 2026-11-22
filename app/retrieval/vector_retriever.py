@@ -21,6 +21,9 @@ class VectorRetriever:
         Returns the top_k most similar chunks.
         """
 
+
+        #$technologies is the list of technologies parsed from the question. 
+        # if None, no filter else only return chunks that are related to the technologies in the list.
         embedding = self.embedding_service.embed(question)
 
         #Search my Vector Index in Neo4j - top K elements ANN 
