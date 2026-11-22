@@ -1,4 +1,6 @@
-from app.retrieval.hybrid_retriever import HybridRetriever
+#from app.retrieval.hybrid_retriever import HybridRetriever
+from app.agent.planner import Planner
+from app.agent.executor import Executor
 from app.llm.prompt_builder import PromptBuilder
 from app.llm.llm_service import LLMService
 import time
@@ -9,7 +11,8 @@ class KnowledgeAssistant:
 
     def __init__(self):
 
-        self.retriever = HybridRetriever()
+        self.planner = Planner()
+        self.executor = Executor()
         self.prompt_builder = PromptBuilder()
         self.llm = LLMService()
 
@@ -17,11 +20,16 @@ class KnowledgeAssistant:
         """
         Retrieves relevant context and generates an answer.
         """
-
+        print("KnowledgeAssistant.ask() was called")
         # Step 1 - Retrieve context
         start = time.perf_counter()
-        context = self.retriever.search(question)
-
+        #context = self.retriever.search(question)
+        plan = self.planner.plan(question)
+        context = self.executor.execute(
+                plan,
+                question
+            )
+                    
         print("Retrieval complete")
         print(f"Retrieval: {time.perf_counter() - start:.2f}s")
         if debug:
@@ -66,4 +74,4 @@ class KnowledgeAssistant:
             print(item["text"][:250])
 
     def close(self):
-        self.retriever.close()
+        self.executor.close()

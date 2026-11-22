@@ -9,7 +9,7 @@ def get_assistant():
     return KnowledgeAssistant()
 
 
-@st.cache_data(ttl=3600)
+@st.cache_data(ttl=5)
 def ask_question(question):
     assistant = get_assistant()
     return assistant.ask(question)

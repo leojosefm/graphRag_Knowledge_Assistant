@@ -19,3 +19,6 @@ class BaseTool(ABC):
     @abstractmethod
     def execute(self, **kwargs):
         pass
+
+    def close(self):
+        pass

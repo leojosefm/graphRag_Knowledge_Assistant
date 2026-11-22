@@ -1,5 +1,6 @@
-from app.agent.tools.vector_search import VectorSearchTool
-from app.agent.tools.graph_search import GraphSearchTool
+from app.agent.tools.retrieval import RetrievalTool
+from app.agent.tools.web_search import WebSearchTool
+from app.agent.tools.neo4j_query import Neo4jQueryTool
 
 
 class ToolRegistry:
@@ -7,8 +8,9 @@ class ToolRegistry:
     def __init__(self):
 
         self.tools = {
-            "vector_search": VectorSearchTool(),
-            "graph_search": GraphSearchTool()
+            "retrieval": RetrievalTool(),
+            "web_search": WebSearchTool(),
+            "neo4j_query": Neo4jQueryTool()
         }
 
     def get(self, name):
@@ -16,3 +18,8 @@ class ToolRegistry:
 
     def list(self):
         return list(self.tools.values())
+
+    def close(self):
+
+        for tool in self.tools.values():
+            tool.close()
